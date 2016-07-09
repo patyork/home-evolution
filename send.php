@@ -19,24 +19,6 @@ $tmp = microtime(TRUE);
 $data['SetupandPost'] = $tmp - $start;
 
 
-// preprocess command ============
-$args = 'args';
-/*switch($command)
-{	
-	case 'volup':
-		$args =  $args . (string)hexdec('0x57e3f00f');
-		break;
-		
-	default:
-		$args = '';
-}*/
-$data['args'] = $command;
-$args = $command;
-
-// presend check ================
-
-
-
 // Database Connection ==========
 $conn = new mysqli($SQLhost, $SQLuser, $SQLpass, $SQLdb);
  
@@ -45,10 +27,22 @@ if ($conn->connect_error) {
   trigger_error('Database connection failed: '  . $conn->connect_error, E_USER_ERROR);
 }
 
-$tmp3 = microtime(TRUE);
-$data['DBConnect'] = $tmp3 - $tmp2;
+$tmp2 = microtime(TRUE);
+$data['DBConnect'] = $tmp2 - $tmp;
 
-$sql="SELECT * FROM $TABLE WHERE UserId=2";
+
+// preprocess command ============
+$data['args'] = $command;
+$args = $command;
+
+
+// presend check ================
+
+
+
+
+// Enpoint Query
+$sql="SELECT * FROM device WHERE UserId=2";
  
 $rs=$conn->query($sql);
  
@@ -62,16 +56,16 @@ $rs->data_seek(0);
 while($row = $rs->fetch_assoc()){
 	$data['sql'] = $row;
 }
+$conn->close();
 
-$tmp4 = microtime(TRUE);
-$data['SqlQuery'] = $tmp4 - $tmp3;
+$tmp3 = microtime(TRUE);
+$data['SqlQuery'] = $tmp3 - $tmp2;
 
 
 // send command ==================
 $url = 'https://api.particle.io/v1/devices/' . $data['sql']['DeviceId'] .'/led?access_token=' . $data['sql']['AccessToken'];
 $payload = array('args' => $args);
 
-// use key 'http' even if you send the request to https://...
 $options = array(
     'http' => array(
         'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
@@ -86,8 +80,8 @@ if ($result === FALSE) {
 
 }
 
-$tmp5 = microtime(TRUE);
-$data['SendCommand'] = $tmp5 - $tmp4;
+$tmp4 = microtime(TRUE);
+$data['SendCommand'] = $tmp4 - $tmp3;
 
 // return a response ==============
 

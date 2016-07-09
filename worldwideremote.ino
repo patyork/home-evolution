@@ -39,6 +39,9 @@ void loop() {
         
         irrecv.enableIRIn(); // Start the receiver
         irrecv.resume(); // Receive the next value
+        
+        Particle.publish("pushData", String(results.value), PRIVATE); // POST Data for logging/additional purposes
+        //Particle.publish("pushData", String(results.value, HEX), PRIVATE); // POST Data for logging/additional purposes
     }
 }
 
