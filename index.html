@@ -21,8 +21,8 @@
 		
 		$http({
   			method  : 'POST',
-  			url     : 'https://api.particle.io/v1/devices//led?access_token=',
-  			data    : 'args=' + command,  // pass in data as strings
+  			url     : 'send.php',
+  			data    : 'command=' + command,  // pass in data as strings
   			headers : { 'Content-Type': 'application/x-www-form-urlencoded' }  // set the headers so angular passing info as form data (not request payload)
  		})
   		.success(function(data) {
